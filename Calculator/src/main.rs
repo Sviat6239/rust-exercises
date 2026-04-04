@@ -1,22 +1,28 @@
 use std::io;
 use std::cmp::Ordering;
 
-
-fn add(num1: f64, num2: f64){
+//Addition function
+fn add(num1: f64, num2: f64) -> f64{
     let buff: f64 = num1 + num2;
     println!("{}", buff);
+    buff
 }
 
-fn sub(num1: f64, num2: f64){
+//Substraction function
+fn sub(num1: f64, num2: f64) -> f64{
     let buff: f64 = num1 - num2;
     println!("{}", buff);
+    buff
 }
 
-fn mul(num1: f64, num2: f64){
+//Multiplication function
+fn mul(num1: f64, num2: f64) -> f64{
     let buff: f64 = num1 * num2;
     println!("{}", buff);
+    buff
 }
 
+//Dividing function
 fn div(num1: f64, num2: f64) ->  f64{
     if num2 == 0.0 {
         println!("Can't divide by zero!");
@@ -28,20 +34,25 @@ fn div(num1: f64, num2: f64) ->  f64{
     }
 }
 
-fn sqr(num: f64){
+//Do square function
+fn sqr(num: f64) -> f64{
     let buff: f64 = num * num;
     println!("{}", buff);
+    buff
 }
 
-fn pow(num1: f64, num2: f64){
+//Do power function
+fn pow(num1: f64, num2: f64) -> f64{
     let mut buff: f64 = 1.0;
     for _ in 0..num2 as usize {
         buff = buff * num1;
     }
 
     println!("{}", buff);
+    buff
 }
 
+//Do root function
 fn root(num: f64) -> f64 {
     let mut i: f64 = 0.0;
     let mut result: f64 = 0.0;
@@ -55,13 +66,68 @@ fn root(num: f64) -> f64 {
     result
 }
 
+//Do logarithm function
+fn log(num1: f64, num2: f64){
 
+}
+
+//Do logarithm base 10 function
+fn log10(num1: f64){
+
+}
+
+//Do sinus function
+fn sin(){
+
+}
+
+//Do cosinus function
+fn cos(){
+
+}
+
+//Do tangens function
+fn tn(){
+
+}
+
+//Do cotangents function
+fn ctn(){
+
+}
+
+//Do factorial function
+fn factorial(){
+
+}
+
+//Do tetration function
+fn tetration(){
+
+}
+
+//Argument parser
+fn arg_parse(input: String) -> f64 {
+    let parts: Vec<&str> = input.split_whitespace().collect();
+
+    let left_num: f64 = parts[0].parse().unwrap();
+    let operator = parts[1];
+    let right_num: f64 = parts[2].parse().unwrap();
+
+    match operator {
+        "+" => add( left_num, right_num),
+        "-" => sub( left_num, right_num),
+        "*" => mul( left_num, right_num),
+        "/" => div( left_num, right_num),
+        _ => panic!("Unknown operator"),
+    }
+}
+
+//Main program function
 fn main() {
-    root(23.0);
-    add(2.0, 19.0);
-    div(4.0, 53.0);
-    sub(23.0, 17.0);
-    mul(3.0, 11.0);
-    pow(23.0, 11.0);
-    sqr(14.074);
+    let mut string: String = String::new();
+
+    let _ = io::stdin().read_line(&mut string);
+    arg_parse(string);
+
 }
