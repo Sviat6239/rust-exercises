@@ -1,6 +1,12 @@
 use std::io;
 use std::cmp::Ordering;
 
+//Token types
+enum Token{
+    Number(f64),
+    Operator(String),
+}
+
 //Addition function
 fn add(num1: f64, num2: f64) -> f64{
     let buff: f64 = num1 + num2;
@@ -97,8 +103,14 @@ fn ctn(){
 }
 
 //Do factorial function
-fn factorial(){
+fn factorial(num: u64) -> f64{
+    let mut result: f64 = 1.0;
 
+    for i in 1..=num {
+        result *= i as f64;
+    }
+
+    return result;
 }
 
 //Do tetration function
@@ -109,17 +121,14 @@ fn tetration(){
 //Argument parser
 fn arg_parse(input: String) -> f64 {
     let parts: Vec<&str> = input.split_whitespace().collect();
+    let mut tokens: Vec<Token> = Vec::new();
 
-    let left_num: f64 = parts[0].parse().unwrap();
-    let operator = parts[1];
-    let right_num: f64 = parts[2].parse().unwrap();
-
-    match operator {
-        "+" => add( left_num, right_num),
-        "-" => sub( left_num, right_num),
-        "*" => mul( left_num, right_num),
-        "/" => div( left_num, right_num),
-        _ => panic!("Unknown operator"),
+    for part in parts {
+        if let Ok(num) = part.parse::<f64>(){
+            tokens.push(Token::Number(num));
+        } else {
+            tokens.push(Token::Operator(part.to_string()));
+        }
     }
 }
 
