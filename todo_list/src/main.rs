@@ -13,25 +13,42 @@ struct Status {
     is_completed: bool,
 }
 
-fn main() -> Result<()> {
-    let conn = Connection::open("todo.db")?;
+fn conn() -> Result<Connection> {
+    let conn = Connection::open("todos.db")?;
+}
 
+fn create_table(conn: &Connection) -> Result<()> {
     conn.execute(
-    "CREATE TABLE IF NOT EXISTS todo(\
+        "CREATE TABLE IF NOT EXISTS todo(\
     id INTEGER PRIMARY KEY,\
     title TEXT NOT NULL,\
     description TEXT NOT NULL,\
     is_completed INTEGER NOT NULL\
     )",
-    (),
+        (),
     )?;
+}
 
+fn todo_model(title: String, description: String, is_completed: bool) -> Result<String> {
     let todo = ToDo{
-        id: 0,
-        title: "Test todo".to_string(),
-        description: "I should learn rust better!".to_string(),
+        id: len(id)+1,
+        title: title.to_string(),
+        description: description.to_string(),
         status: Status{is_completed: false},
     };
+}
+
+fn get_todos(){}
+
+fn get_todo(){}
+
+fn insert_todo(){}
+
+fn update_todo(){}
+
+fn delete_todo(){}
+
+fn main() -> Result<()> {
 
     conn.execute(
         "INSERT INTO todo (title, description, is_completed) VALUES (?1, ?2, ?3)",
