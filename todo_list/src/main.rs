@@ -5,16 +5,13 @@ struct ToDo{
     id: i64,
     title: String,
     description: String,
-    status: Status,
-}
-
-#[derive(Debug)]
-struct Status {
     is_completed: bool,
 }
 
+
 fn conn() -> Result<Connection> {
     let conn = Connection::open("todos.db")?;
+    Ok(conn)
 }
 
 fn create_table(conn: &Connection) -> Result<()> {
@@ -27,41 +24,18 @@ fn create_table(conn: &Connection) -> Result<()> {
     )",
         (),
     )?;
+    Ok(())
 }
 
-fn todo_model(title: String, description: String, is_completed: bool) -> Result<String> {
-    let todo = ToDo{
-        id: len(id)+1,
-        title: title.to_string(),
-        description: description.to_string(),
-        status: Status{is_completed: false},
-    };
-}
-
-fn get_todos(){}
-
-fn get_todo(){}
-
-fn insert_todo(){}
-
-fn update_todo(){}
-
-fn delete_todo(){}
-
-fn main() -> Result<()> {
-
-    conn.execute(
-        "INSERT INTO todo (title, description, is_completed) VALUES (?1, ?2, ?3)",
-        (&todo.title, &todo.description, &todo.status.is_completed),
-    )?;
-
+fn get_todos(conn: &Connection) -> Result<()> {
     let mut stmt = conn.prepare("SELECT id, title, description, is_completed FROM todo")?;
+
     let todo_iter = stmt.query_map([], |row| {
         Ok(ToDo{
             id: row.get(0)?,
             title: row.get(1)?,
             description: row.get(2)?,
-            status: Status{is_completed: row.get(3)?},
+            is_completed: row.get(3)?,
         })
     })?;
 
@@ -69,5 +43,35 @@ fn main() -> Result<()> {
         let todo = todo?;
         println!("Found todo #{} {:?}", todo.id, todo);
     }
+    Ok(())
+}
+
+fn get_todo(){}
+
+fn insert_todo(conn: &Connection, title: String, description: String, is_completed: bool) -> Result<()> {
+    conn.execute(
+        "INSERT INTO todo (title, description, is_completed) VALUES (?1, ?2, ?3)",
+        (&title, &description, is_completed),
+    )?;
+    Ok(())
+}
+
+fn update_todo(){}
+
+fn delete_todo(){}
+
+fn main() -> Result<()>{
+    let conn = conn()?;
+    create_table(&conn)?;
+
+    insert_todo(
+        &conn,
+        "Learn Rust".to_string(),
+        "I should know Rust better".to_string(),
+        false,
+    )?;
+
+    get_todos(&conn)?;
+
     Ok(())
 }
