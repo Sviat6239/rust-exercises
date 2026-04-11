@@ -73,9 +73,21 @@ fn insert_todo(conn: &Connection, title: String, description: String, is_complet
     Ok(())
 }
 
-fn update_todo(){}
+fn update_todo(conn: &Connection, id: i64, title: String, description: String, is_completed: bool) -> Result<()> {
+    conn.execute(
+        "UPDATE todo SET title = ?1, description = ?2, is_completed = ?3 WHERE id = ?4",
+        (&title, &description, is_completed, id),
+    )?;
+    Ok(())
+}
 
-fn delete_todo(){}
+fn delete_todo(conn: &Connection, id: i64) -> Result<()> {
+    conn.execute(
+        "DELETE todo WHERE id = ?1",
+        (id,)
+    )?;
+    Ok(())
+}
 
 fn main() -> Result<()>{
     let conn = conn()?;
@@ -91,6 +103,14 @@ fn main() -> Result<()>{
     get_todos(&conn)?;
 
     get_todo(&conn, 1)?;
+
+    update_todo(&conn, 1, "Learn Go".to_string(), "I should know Go better".to_string(), false)?;
+
+    get_todos(&conn)?;
+
+    delete_todo(&conn, 1)?;
+
+    get_todos(&conn)?;
 
     Ok(())
 }
