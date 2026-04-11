@@ -46,7 +46,24 @@ fn get_todos(conn: &Connection) -> Result<()> {
     Ok(())
 }
 
-fn get_todo(){}
+fn get_todo(conn: &Connection, id: i64) -> Result<()> {
+    let mut stmt = conn.prepare("SELECT id, title, description, is_completed FROM todo WHERE id = ?1")?;
+    let todo_iter = stmt.query_map([id], |row| {
+        Ok(ToDo{
+            id: row.get(0)?,
+            title: row.get(1)?,
+            description: row.get(2)?,
+            is_completed: row.get(3)?,
+        })
+    })?;
+
+    for todo in todo_iter{
+        let todo = todo?;
+        println!("{:?}", todo);
+    }
+
+    Ok(())
+}
 
 fn insert_todo(conn: &Connection, title: String, description: String, is_completed: bool) -> Result<()> {
     conn.execute(
@@ -72,6 +89,8 @@ fn main() -> Result<()>{
     )?;
 
     get_todos(&conn)?;
+
+    get_todo(&conn, 1)?;
 
     Ok(())
 }
